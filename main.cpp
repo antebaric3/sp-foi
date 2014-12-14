@@ -1,8 +1,8 @@
 #include<iostream>
 #include<cstdlib>
 #include<time.h>
-//#include "queue_array.h"
-#include "queue_pointer.h"
+#include "queue_array.h"
+//#include "queue_pointer.h"
 using namespace std;
 
 string imena_m[14] = {"Ivo","Marko","Ilija","Joso", "Roko", "Marian", "Teo","Ilija", "Roko", "Lovor","Marian", "Rikard","Rajko","Petar"};
@@ -99,7 +99,6 @@ void to_queue(qu *Q, customer *array) {
 		
 		//ulaz
 		if(elapsed==enter+model.info.ai) {
-			cout << "--------------" << elapsed << endl;
 			cout << "###### Klijent " << model.name << " ulazi u postu." << endl;
 			cout << "Podatci: " << endl;
 			print_info(model);	
@@ -108,31 +107,25 @@ void to_queue(qu *Q, customer *array) {
 			if(!isEmptyQ(Q)) {
 				if(model.info.ci < (frontQ(Q)).info.ci) cout << "###### Klijent s prioritetom! Sluzbenik mu govori da je sljedeci na redu." << endl;
 					insert = true;					
-					order(Q, model);
-					cout << "Proso order" << endl;				
-					flip(Q);
-					cout << "Proso flip" << endl;	
+					order(Q, model);			
+					flip(Q);	
 				//} else enQueueQ(model,Q);
 			} else enQueueQ(model,Q);
-			i++;
-			cout << "Proso i++" << endl;	
+			i++;	
 		}
 		
 		if(!isEmptyQ(Q) || in_prog) {
 			if(!in_prog) {
 				in_prog = true;
 				current = frontQ(Q);
-				cout << "--------------" << elapsed << endl;
 				cout << "###### Klijent " << current.name << " je na redu." << endl;
 				deQueueQ(Q);	
 				exit = elapsed+current.info.bi;		
-				cout << "Izlazi na " << exit << endl;	
 			}
 
 			//izlaz
 			if(elapsed==exit && in_prog) {
 				in_prog = false; 
-				cout << "--------------" << elapsed << endl;
 				cout << "###### Klijent " << current.name << " izlazi iz poste." << endl;	
 			} 	
 		}
@@ -273,7 +266,6 @@ int main() {
 	do{
 		again = 1;
 		system("cls");
-		cout << "Zbog krajnje kontradiktronog zadatka svaka opcija radi zasebno" << endl << "za vise informacija javiti se na antbaric@foi.hr." << endl;
 		cout << "1. Simulacija ulazaka i izlazaka" << endl;
 		cout << "2. Ispisi klijente znaka jarac, mlade od 40" << endl;
 		cout << "3. Izbaci trudnice koje cekaju za EvoTV" << endl;
