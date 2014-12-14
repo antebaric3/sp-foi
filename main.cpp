@@ -1,8 +1,8 @@
 #include<iostream>
 #include<cstdlib>
 #include<time.h>
-#include "queue_array.h"
-//#include "queue_pointer.h"
+//#include "queue_array.h"
+#include "queue_pointer.h"
 using namespace std;
 
 string imena_m[14] = {"Ivo","Marko","Ilija","Joso", "Roko", "Marian", "Teo","Ilija", "Roko", "Lovor","Marian", "Rikard","Rajko","Petar"};
@@ -378,7 +378,7 @@ int main() {
 							temp = array;
 							sort(temp);
 							
-							for(int i=num+50;i>=0+50;i--) {
+							for(int i=num+100;i>=0;i--) {
 								customer model = temp[i];
 								if(model.info.di == pick) print_info(model);
 							}
