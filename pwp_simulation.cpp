@@ -18,6 +18,7 @@ struct data {
 
 struct peer {
 	data info; 
+	bool cons[5];
 	peer *next;
 };
 peer *peerList = new peer;
@@ -25,9 +26,30 @@ peer *peerList = new peer;
 string status[4] = {
 	"Unchooked",
 	"Chooked",
-	"Interested",
-	"Uninterested"
 };
+
+void resolve_cons() {
+	peer *temp = peerList;
+	float best = 0;
+	while(temp->next) { temp=temp->next;
+		for(int i=0;i<5;i++) {
+			temp->cons[i] = rand()%2;
+			if(temp->cons[i]) temp->info.status = 0;
+			else temp->info.status = 1;
+		}
+	}	
+}
+
+float get_best_peer() {
+	peer *temp = peerList;
+	float best = 0;
+	while(temp->next) { temp=temp->next;
+		if(best<temp->info.speed && temp->info.status != 1) 
+			best = temp->info.speed;
+	}
+	
+	return best;
+}
 
 void gen_peers(int num) {
 	peerList->next = NULL;
@@ -43,22 +65,18 @@ void gen_peers(int num) {
 		temp->info.finished = false;
 		temp->info.seeding = false;
 		temp->info.completed = 0;
-		temp->info.speed = rand() % 4096+1;
+		temp->info.speed = rand() % 1024+1;
 		temp->next = NULL;
 	}
 }
 
 void print_peers() {
 	cout << "Peer list: " << endl;
+	cout << "---------------------------------------------------------" << endl;
 	peer *temp = peerList;
 	while(temp->next) { temp=temp->next;
-		if(temp->info.status != 1 && !temp->info.finished)
-			cout << temp->info.id << "  " << temp->info.ip << "  " << temp->info.port << "  " << status[temp->info.status-1] << "  " << temp->info.speed << "Kb/s" << "  " << temp->info.completed << "/100000" << endl;
-		/* 
-		cout << "ID: " << temp->id << endl;
-		cout << "IP: " << temp->ip << endl;
-		cout << "Port " << temp->port << endl;
-		cout << "Status: " << status[temp->status-1] << endl; ;*/
+		if(!temp->info.finished)
+			cout << temp->info.id << "  " << temp->info.ip << "  " << temp->info.port << "  " << status[temp->info.status] << "  " << temp->info.speed << "Kb/s" << "  " << temp->info.completed << "/100000" << endl;
 	}
 }
 
@@ -83,6 +101,7 @@ bool completed(data local) {
 }
 
 void update_peers() {
+	resolve_cons();
 	peer *temp = peerList;
 	while(temp->next) { temp=temp->next;
 		temp->info.completed+=temp->info.speed;	
@@ -97,9 +116,9 @@ void simulate(data local) {
 		system("cls");
 		update_peers();
 		sort();
-		local.completed+=peerList->next->info.speed;
+		local.completed+=get_best_peer();
 		print_peers();	
-		cout << "My completed: " << local.completed << "/100000" << endl;
+		if(local.completed<100000) cout << "My completed: " << local.completed << "/100000" << endl;
 		system("pause");
 	}
 	cout << "My completed: 100000/100000" << endl;
